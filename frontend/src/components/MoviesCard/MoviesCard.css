@@ -1,0 +1,109 @@
+.card {
+    margin: 0px auto;
+    width: 364px;
+    height: 281px;
+    background: #FDFDFD;
+    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+}
+
+.card__image {
+    width: 100%;
+    height: 203px;
+    object-fit: cover;
+    border-radius: 6px 6px 0px 0px;
+}
+
+.card__under {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 24px 16px 16px;
+}
+
+.card__info {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card__name {
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    color: #000000;
+    margin: 0px;
+    padding: 0px;
+}
+
+.card__time {
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 13px;
+    color: #A0A0A0;
+    margin: 17px 0px 0px 0px;
+}
+
+.card__like-button {
+    background-image: url('../../images/defaultHeart.svg');
+    margin: 0;
+    padding: 0;
+    width: 14px;
+    height: 12px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: white;
+    border: none;
+    align-self: center;
+    cursor: pointer;
+}
+
+.card__like-button_active {
+    background-image: url('../../images/activeHeart.svg');
+}
+
+.card__delete-button {
+    background-image: url('../../images/deleteButton.svg');
+    margin: 0;
+    padding: 0;
+    width: 14px;
+    height: 12px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: white;
+    border: none;
+    align-self: center;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 1279px) {
+    .card {
+        width: 339px;
+        height: 262px;
+    }
+
+    .card__image {
+        width: 100%;
+        height: 190px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .card {
+        width: 300px;
+        height: 237px;
+    }
+
+    .card__image {
+        width: 100%;
+        height: 168px;
+    }
+
+    .card__name {
+        font-size: 12px;
+        line-height: 15px;
+    }
+}

@@ -1,0 +1,143 @@
+.aboutMe {
+    padding: 110px 70px 100px 70px;
+}
+
+.aboutMe__info {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+}
+
+.aboutMe__box {
+    margin-top: 66px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.aboutMe__name {
+    margin: 0px;
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 50px;
+    line-height: 58px;
+    letter-spacing: -0.04em;
+    color: #000000;
+}
+
+.aboutMe__prof {
+    margin: 18px 0px 0px 0px;
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 20px;
+    color: #111111;
+    mix-blend-mode: normal;
+}
+
+.aboutMe__about {
+    margin: 26px 0px 0px 0px;
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    color: #000000;
+    mix-blend-mode: normal;
+}
+
+.aboutMe__gitHub {
+    margin: 100px 0px 0px 0px;
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: #000000;
+}
+
+.aboutMe__photo {
+    border-radius: 10px;
+}
+
+@media screen and (max-width: 1279px) {
+    .aboutMe {
+        padding: 90px 50px;
+    }
+
+    .aboutMe__name {
+        font-size: 40px;
+        line-height: 40px;
+    }
+
+    .aboutMe__prof {
+        margin: 16px 0px 0px 0px;
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+    .aboutMe__about {
+        margin: 20px 0px 0px 0px;
+        font-size: 12px;
+        line-height: 18px;
+        max-width: 364px;
+    }
+
+    .aboutMe__photo {
+        max-width: 255px;
+        max-height: 307px;
+    }
+
+    .aboutMe__gitHub {
+        margin: 87px 0px 0px 0px;
+    }
+
+
+}
+
+@media screen and (max-width: 767px) {
+    .aboutMe {
+        padding: 70px 14px;
+    }
+
+    .aboutMe__info {
+        display: flex;
+        flex-direction: column;
+        max-width: 600px;
+        margin-top: 40px;
+    }
+
+    .aboutMe__box {
+        margin-top: 60px;
+        display: flex;
+        flex-direction: column-reverse;
+    }
+
+    .aboutMe__name {
+        font-size: 30px;
+        line-height: 36px;
+    }
+
+    .aboutMe__prof {
+        margin-top: 20px;
+        font-size: 11px;
+        line-height: 16px;
+    }
+
+    .aboutMe__about {
+        margin-top: 20px;
+        font-size: 11px;
+        line-height: 16px;
+    }
+
+    .aboutMe__gitHub {
+        margin-top: 40px;
+    }
+
+    .aboutMe__photo {
+        border-radius: 10px;
+        max-width: 292px;
+        max-height: 352px;
+    }
+}

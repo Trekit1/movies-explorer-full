@@ -1,0 +1,223 @@
+.aboutProject {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 110px 70px;
+}
+
+.aboutProject__box {
+    margin-top: 70px;
+    display: flex;
+    flex-direction: row;
+}
+
+.aboutProject__title {
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: -0.04em;
+    color: #000000;
+    margin: 0px;
+}
+
+.aboutProject__text {
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #000000;
+    margin: 26px 0px 0px 0px;
+}
+
+.aboutProject__column {
+    display: flex;
+    flex-direction: column;
+    margin-left: 40px;
+    max-width: 550px;
+}
+
+.aboutProject__column:first-child {
+    margin-left: 0px;
+}
+
+.aboutProject__strings {
+    display: flex;
+    margin-top: 110px;
+}
+
+.aboutProject__string {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.aboutProject__string_back {
+    background: #2BE080;
+    width: 228px;
+    height: 36px;
+}
+
+.aboutProject__string_front {
+    background: #F2F2F2;
+    width: 912px;
+    height: 36px;
+}
+
+.aboutProject__string-text {
+    margin: 0px;
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #000000;
+}
+
+.aboutProject__under-strings {
+    display: flex;
+    margin-top: 14px;
+}
+
+.aboutProject__under-string {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+}
+
+.aboutProject__under-string_back {
+    width: 228px;
+}
+
+.aboutProject__under-string_front {
+    width: 912px;
+}
+
+
+.aboutProject__under-text {
+    margin: 0px;
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: #A0A0A0;
+}
+
+@media screen and (max-width: 1279px) {
+    .aboutProject {
+        padding: 90px 50px;
+    }
+
+    .aboutProject__text {
+        font-size: 12px;
+        line-height: 18px;
+        margin: 22px 0px 0px 0px;
+    }
+
+    .aboutProject__column {
+        margin-left: 30px;
+    }
+
+    .aboutProject__strings {
+        margin-top: 93px;
+    }
+
+    .aboutProject__string_back {
+        min-width: 140px;
+    }
+
+    .aboutProject__string_front {
+        min-width: 528px;
+        height: 35px;
+    }
+
+    .aboutProject__string-text {
+        font-size: 14px;
+        line-height: 17px;
+    }
+
+    .aboutProject__under-string_back {
+        min-width: 140px;
+    }
+
+    .aboutProject__under-string_front {
+        min-width: 528px;
+    }
+}
+
+
+@media screen and (max-width: 767px) {
+    .aboutProject {
+        padding: 70px 18px;
+    }
+
+    .aboutProject__box {
+        margin-top: 60px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .aboutProject__title {
+        font-size: 18px;
+        line-height: 22px;
+    }
+
+    .aboutProject__text {
+        font-size: 11px;
+        line-height: 16px;
+        margin: 16px 0px 0px 0px;
+    }
+
+    .aboutProject__column {
+        margin: 0px;
+    }
+
+    .aboutProject__column:first-child {
+        margin-bottom: 56px;
+    }
+
+    .aboutProject__strings {
+        display: flex;
+        margin: 60px 0px 0px 0px;
+    }
+
+    .aboutProject__string_back {
+        max-width: 100%;
+        min-width: 100px;
+        height: 35px;
+    }
+
+    .aboutProject__string_front {
+        max-width: 100%;
+        min-width: 184px;
+        height: 35px;
+    }
+
+    .aboutProject__string-text {
+        font-size: 11px;
+        line-height: 13px;
+    }
+
+    .aboutProject__under-strings {
+        margin-top: 10px;
+    }
+
+
+    .aboutProject__under-string_back {
+        max-width: 100%;
+        min-width: 100px;
+    }
+
+    .aboutProject__under-string_front {
+        max-width: 100%;
+        min-width: 184px;
+    }
+
+    .aboutProject__under-text {
+        font-size: 11px;
+        line-height: 13px
+    }
+}

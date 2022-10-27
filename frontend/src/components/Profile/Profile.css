@@ -1,0 +1,111 @@
+.profile {
+    padding: 74px 435px 70px 435px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile__title {
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 29px;
+    color: #000000;
+    margin: 0px;
+}
+
+.profile__box_name {
+    display: flex;
+    justify-content: space-between;
+    width: 410px;
+    display: flex;
+    margin-top: 123px;
+    height: 30px;
+    border-bottom: 1px solid #E8E8E8;
+}
+
+.profile__box_email {
+    width: 410px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 17px;
+}
+
+.profile__name-string {
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 13px;
+    color: #000000;
+    margin: 0px;
+}
+
+.profile__user-info {
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 13px;
+    color: #000000;
+    margin: 0px;
+}
+
+.profile__edit-button {
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+    color: #000000;
+    margin: 220px 0px 0px 0px;
+    cursor: pointer;
+}
+
+.profile__logout-button {
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    color: #FF3055;
+    margin: 16px 0px 0px 0px;
+    cursor: pointer;
+}
+
+@media screen and (max-width:1279px) {
+    .profile {
+        padding: 236px 179px 269px 179px;
+    }
+
+    .profile__box_name {
+        margin-top: 96px;
+    }
+
+    .profile__edit-button {
+
+        margin-top: 210px;
+    }
+}
+
+@media screen and (max-width:767px) {
+    .profile {
+        padding: 70px 58px 40px 58px;
+    }
+
+    .profile__box_name {
+        margin-top: 80px;
+        width: 260px;
+    }
+
+    .profile__box_email {
+        width: 260px;
+    }
+
+    .profile__edit-button {
+
+        margin-top: 379px;
+    }
+}

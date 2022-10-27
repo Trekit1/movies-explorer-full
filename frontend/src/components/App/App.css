@@ -1,0 +1,14 @@
+.page {
+    margin: 0px auto;
+    min-width: 320px;
+    max-width: 1280px;
+}
+
+.page__link {
+    transition: opacity 0.1s linear 0s;
+    cursor: pointer;
+}
+
+.page__link:hover {
+    opacity: 0.8;
+}
