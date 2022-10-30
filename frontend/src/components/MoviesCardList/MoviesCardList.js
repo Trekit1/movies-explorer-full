@@ -1,5 +1,6 @@
 import './MoviesCardList.css';
-import MoviesCard from '../MoviesCard/MoviesCard'
+import MoviesCard from '../MoviesCard/MoviesCard';
+import React from 'react';
 
 
 
@@ -7,8 +8,8 @@ function MoviesCardList({movies, saveMovie, deleteMovie}) {
    
     return(
         <section className='moviesCardList'>
-            {movies.map((movie) => (
-                <MoviesCard movie={movie} key={movie.id} saveMovie={saveMovie} deleteMovie={deleteMovie}/>))}
+            {movies.map((movie, index) => (
+                <MoviesCard movie={movie} key={index} saveMovie={saveMovie} deleteMovie={deleteMovie}/>))}
         </section>
     )
 }

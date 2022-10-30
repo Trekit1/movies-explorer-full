@@ -5,8 +5,8 @@ import Profile from '../Profile/Profile';
 import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
 import Menu from '../Menu/Menu';
-import React, { useState, useEffect} from "react";
-import { Route, Switch, useHistory, Redirect} from "react-router-dom";
+import React, { useState, useEffect, useCallback} from "react";
+import { Route, Switch, useHistory} from "react-router-dom";
 import { mainApi } from '../../utils/MainApi';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import { CurrentUserContext } from '../CurrentUserContext/CurrentUserContext'
@@ -22,25 +22,63 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [movies, setMovies] = useState([]);
   const [currentMovies, setCurrentMovies] = useState([]);
-  const [filter, setFilter] = useState(false)
+  const [moviesFilter, setFilter] = useState(false)
   const [userMovies, setUserMovies] = useState([])
   const [currentUserMovies, setCurrentUserMovies] = useState([]);
-  const [userMoviesfilter, setUserMoviesFilter] = useState(false)
+  const [userMoviesFilter, setUserMoviesFilter] = useState(false)
+
+  const [loading, setLoading] = useState(false)
+
+  const [textErrorApiRegister, setTextErrorApiRegister] = useState('');
+  const [textErrorApiLogin, setTextErrorApiLogin] = useState('')
+
+  function useFormWithValidation() {
+    const [values, setValues] = useState({});
+    const [errors, setErrors] = useState({});
+    const [isValid, setIsValid] = useState(false);
+  
+    const handleChange = (event) => {
+      const target = event.target;
+      const name = target.name;
+      const value = target.value;
+      setValues({...values, [name]: value});
+      setErrors({...errors, [name]: target.validationMessage });
+      setIsValid(target.closest("form").checkValidity());
+    };
+  
+    const resetForm = useCallback(
+      (newValues = {}, newErrors = {}, newIsValid = false) => {
+        setValues(newValues);
+        setErrors(newErrors);
+        setIsValid(newIsValid);
+      },
+      [setValues, setErrors, setIsValid]
+    );
+    return { values, handleChange, errors, isValid, resetForm, setValues };
+  }
 
   useEffect(() => {
+    setLoading(true)
     mainApi.getUserMovies()
     .then((res) => {
       setUserMovies(res)
-      console.log(res)
+
     })
     .catch((err) => {
       console.log(err)
     })
+    .finally(() => {
+      setLoading(false)
+    });
   },[loggedIn])
 
   useEffect(() => {
     setCurrentUserMovies(userMovies)
   },[userMovies]);
+
+  useEffect(() => {
+    setCurrentMovies(movies)
+  },[movies]);
 
  
   function openMenu() {
@@ -51,28 +89,15 @@ function App() {
     setIsMenu(false)
   }
 
-  useEffect(() => {
-    moviesApi
-      .getInitialMovies()
-      .then((res) => {
-        setMovies(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [loggedIn]);
-
-  useEffect(() => {
-    setCurrentMovies(movies)
-  },[movies]);
-
-
-
   function userRegister(email, password, name) {
     mainApi
       .register(email, password, name)
+      .then((res) => {
+        history.push('/signin')
+        setTextErrorApiRegister('')
+      })
       .catch((err) => {
-        console.log(err);
+        setTextErrorApiRegister(err)
       });
   }
 
@@ -86,10 +111,11 @@ function App() {
       })
       .then((res) => {
         setLoggedIn(true);
+        setTextErrorApiLogin('')
         history.push("/movies");
       })
       .catch((err) => {
-        console.log(err);
+        setTextErrorApiLogin(err)
       });
   }
 
@@ -122,13 +148,23 @@ function App() {
 
   function getOut() {
     localStorage.removeItem("token");
-    moviesApi.deleteHeaders();
+    mainApi.deleteHeaders();
     setLoggedIn(false);
     history.push("/");
   }
 
-  function moviesFilter() {
-    if (filter) {
+  function changeUserInfo(email, name) {
+    mainApi.changeUserInfo(email, name)
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }
+
+  function filterMovies() {
+    if (moviesFilter) {
       setCurrentMovies(movies)
       setFilter(false)
     } else {
@@ -137,8 +173,8 @@ function App() {
     }
   }
 
-  function userMoviesFilter() {
-    if (userMoviesfilter) {
+  function userFilterMovies() {
+    if (userMoviesFilter) {
       setCurrentUserMovies(userMovies)
       setUserMoviesFilter(false)
     } else {
@@ -168,8 +204,27 @@ function App() {
       });
   }
 
+  function searchMovies(values) {
+    setLoading(true)
+    moviesApi
+      .getInitialMovies()
+      .then((movies) => {
+        setMovies(movies)
+        setMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase())))
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false)
+      });
+  }
 
-
+  function searchUserMovies(values) {
+    setCurrentUserMovies(userMovies)
+    setCurrentUserMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase())))
+  }
+  
     return(
         <div className="page">
           <CurrentUserContext.Provider value={currentUser}>
@@ -177,22 +232,18 @@ function App() {
               <Route exact path='/'>
                 <Main loggedIn={loggedIn}/>
               </Route>
-              <ProtectedRoute path='/movies' component={Movies} onOpen={openMenu} moviesFilter={moviesFilter} movies={currentMovies} saveMovie={saveMovie} loggedIn={loggedIn}/>
-              <ProtectedRoute path='/saved-movies' component={SavedMovies} onOpen={openMenu} moviesFilter={userMoviesFilter} deleteMovie={deleteMovie} movies={currentUserMovies} loggedIn={loggedIn}/>
-              <ProtectedRoute path='/profile' component={Profile} onOpen={openMenu} getOut={getOut} loggedIn={loggedIn}/>
-              <Route exact path="/">
-              {loggedIn ? <Redirect to="/" /> : <Redirect to="/movies" />}
-              </Route>
+              <ProtectedRoute path='/movies' component={Movies} loggedIn={loggedIn} loading={loading} onOpen={openMenu} moviesFilter={filterMovies} movies={currentMovies} saveMovie={saveMovie} useFormWithValidation={useFormWithValidation} searchMovies={searchMovies}/>
+              <ProtectedRoute path='/saved-movies' component={SavedMovies} loggedIn={loggedIn} loading={loading} onOpen={openMenu} moviesFilter={userFilterMovies} deleteMovie={deleteMovie} movies={currentUserMovies} useFormWithValidation={useFormWithValidation} searchUserMovies={searchUserMovies}/>
+              <ProtectedRoute path='/profile' component={Profile} loggedIn={loggedIn} onOpen={openMenu} getOut={getOut}  useFormWithValidation={useFormWithValidation} changeUserInfo={changeUserInfo}/>
               <Route path='/signup'>
-                <Register userRegister={userRegister}/>
+                <Register userRegister={userRegister} useFormWithValidation={useFormWithValidation} textErrorApiRegister={textErrorApiRegister}/>
               </Route>
               <Route path='/signin'>
-                <Login setLoggedIn={setLoggedIn} userAuthorization={userAuthorization}/>
+                <Login userAuthorization={userAuthorization} useFormWithValidation={useFormWithValidation} textErrorApiLogin={textErrorApiLogin}/>
               </Route>
             </Switch>
             <Menu isOpen={isMenu} onClose={closeMenu}/>
           </CurrentUserContext.Provider>
-        
         </div>
     )
 }

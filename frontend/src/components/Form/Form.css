@@ -36,14 +36,20 @@
     border-radius: 8px;
     border: none;
     height: 46px;
+    outline: none;
 }
+
+.form__input_error {
+    color: red;
+}
+
 
 .form__input_password {
     margin: 0px;
 }
 
 .form__button {
-    margin: 179px 0px 0px 0px;
+    margin: 0px;
     background: #3456F3;
     border-radius: 3px;
     height: 45px;
@@ -55,6 +61,17 @@
     line-height: 17px;
     text-align: center;
     color: #FFFFFF;
+    width: 100%;
+}
+
+.form__button_disabled {
+    background-color: #C4C4C4;
+    color: black;
+}
+
+.form__button_disabled:hover {
+    opacity: 1;
+    cursor: auto;
 }
 
 .form__question {
@@ -86,6 +103,45 @@
     justify-content: center;
 }
 
+.form__error-text {
+    margin: 10px 0px 0px 0px;
+    padding: 0px;
+    color: red;
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 12px;
+    visibility: hidden;
+}
+
+.form__error-text_visible {
+    visibility: visible;
+}
+
+.form__api-error {
+    margin: 0px;
+    padding: 0px;
+    color: red;
+    align-self: center;
+}
+
+.form__api-error_login {
+    margin: 0px;
+    padding: 0px;
+}
+
+.form__api-error_register {
+    margin: 0px;
+    padding: 0px;
+}
+
+.form__box {
+    margin: 179px 0px 0px 0px;
+    display: flex;
+    flex-direction: column;
+}
+
 @media screen and (max-width: 1279px) {
     .form {
         padding: 232px 186px;
@@ -107,8 +163,11 @@
         align-self: center;
     }
 
-    .form__button {
+    .form__box {
         margin: 267px 0px 0px 0px;
+    }
+
+    .form__button {
         font-size: 12px;
         line-height: 15px;
         min-width: 260px;

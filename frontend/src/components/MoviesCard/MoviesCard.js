@@ -26,8 +26,16 @@ function MoviesCard({movie, saveMovie, deleteMovie}) {
     
     return(
         <div className='card'>
-            <Route path='/movies'><a href={movie.trailerLink} target='_blank' rel="noreferrer"><img src={` https://api.nomoreparties.co/` + movie.image.url} className='card__image' alt='card'/></a></Route>
-            <Route path='/saved-movies'><a href={movie.trailerLink} target='_blank' rel="noreferrer"><img src={` https://api.nomoreparties.co/` + movie.image} className='card__image' alt='card'/></a></Route>
+            <Route path='/movies'>
+                <a href={movie.trailerLink} target='_blank' rel="noreferrer">
+                    <img src={` https://api.nomoreparties.co/` + movie.image.url} className='card__image' alt='card'/>
+                </a>
+            </Route>
+            <Route path='/saved-movies'>
+                <a href={movie.trailerLink} target='_blank' rel="noreferrer">
+                    <img src={` https://api.nomoreparties.co/` + movie.image} className='card__image' alt='card'/>
+                </a>
+            </Route>
             <div className='card__under'>
                 <div className='card__info'>
                   <h2 className='card__name'>{movie.nameRU}</h2>

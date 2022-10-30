@@ -1,28 +1,19 @@
 import Form from "../Form/Form";
-import {useState} from 'react';
 
-function Login({userAuthorization}) {
+function Login({userAuthorization, useFormWithValidation, textErrorApiLogin}) {
     const toRegister = '/signup'
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const {values, handleChange, errors, isValid, resetForm } = useFormWithValidation();
 
-    function handleChangeEmail(e) {
-        setEmail(e.target.value);
-      }
-    
-      function handleChangePassword(e) {
-        setPassword(e.target.value);
-      }
-
-      function handleSubmit(evt) {
-        evt.preventDefault();
-        userAuthorization(email, password);
-      }
+    function handleSubmit(evt) {
+      evt.preventDefault();
+      userAuthorization(values.email, values.password);
+      resetForm();
+    }
 
     return(
         <Form title='Рады видеть!' buttonName='Войти' question ='Еще не зарегистрированы?' 
-        linkName='Регистрация' to={toRegister} handleChangeEmail={handleChangeEmail} handleChangePassword={handleChangePassword} handleSubmit={handleSubmit}/>
+        linkName='Регистрация' to={toRegister} handleSubmit={handleSubmit} handleChange={handleChange} isValid={isValid} errors={errors} textErrorApiLogin={textErrorApiLogin}/>
     )
 }
 

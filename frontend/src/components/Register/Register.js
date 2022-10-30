@@ -1,36 +1,24 @@
 import Form from "../Form/Form";
-import {useState} from 'react';
 
-function Register({userRegister}) {
-    const toLogin = '/signin'
+function Register({userRegister, useFormWithValidation, textErrorApiRegister}) {
+    const toLogin = '/signin';
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [name, setName] = useState("");
+    const {values, handleChange, errors, isValid, resetForm } = useFormWithValidation();
 
-    function handleChangeEmail(e) {
-        setEmail(e.target.value);
-      }
-    
-      function handleChangePassword(e) {
-        setPassword(e.target.value);
-      }
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      userRegister(values.email, values.password, values.name);
+      resetForm();
+    }
 
-      function handleChangeName(e) {
-        setName(e.target.value);
-      }
-
-      function handleSubmit(evt) {
-        evt.preventDefault();
-        userRegister(email, password, name);
-      }
+    const inputNameClassName = `form__input form__input_name ${errors.name === '' ? ' ' : 'form__input_error'}`
 
     return(
         <Form title='Добро пожаловать!' buttonName='Зарегистрироваться' question ='Уже зарегистрированы?' linkName='Войти' 
-        to={toLogin} handleChangeEmail={handleChangeEmail} handleChangePassword={handleChangePassword} handleSubmit={handleSubmit}>
+        to={toLogin}  handleSubmit={handleSubmit} handleChange={handleChange} isValid={isValid} errors={errors} textErrorApiRegister={textErrorApiRegister}>
             <>
-            <p className='form__input-name'>Имя</p>
-            <input className='form__input form__input_name' minLength="2" maxLength="40" required onChange={handleChangeName}></input>
+            <label htmlFor='name' className='form__input-name'>Имя</label>
+            <input name='name' className={inputNameClassName} minLength="2" maxLength="40" required></input>
             </>
         </Form>
     )
