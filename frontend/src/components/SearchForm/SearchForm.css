@@ -105,6 +105,22 @@
     visibility: visible;
 }
 
+
+.searchForm__test {
+    background-image: url('../../images/greyButton.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 36px;
+    height: 20px;
+    border: none;
+    background-color: white;
+}
+
+
+.searchForm__test_active {
+    background-image: url('../../images/greenButton.svg');
+}
+
 @media screen and (max-width: 1279px) {
     .searchForm {
         padding: 80px 30px 10px 30px;

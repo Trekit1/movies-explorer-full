@@ -1,18 +1,24 @@
 import './MoviesCard.css';
-import {useState} from 'react'
 import { Route } from "react-router-dom";
 
-function MoviesCard({movie, saveMovie, deleteMovie}) {
+function MoviesCard({movie, saveMovie, deleteMovie, userMovies}) {
 
-    const [isLiked, setIsLiked] = useState(false)
+    const isLiked = userMovies.some((i) => i.movieId === movie.id);
 
-    function removeMovie() {
+    function handleRemoveMovie() {
         deleteMovie(movie)
     }
 
-    function like() {
-        saveMovie(movie);
-        setIsLiked(true);
+    function handleLikeClick() {
+        if (isLiked) {
+            userMovies.some((i) => {
+                if (i.movieId === movie.id) {
+                    deleteMovie(i)
+                }
+            })
+        } else {
+            saveMovie(movie);
+        }
     }
     
     function getTimeFromMins(mins) {
@@ -39,8 +45,8 @@ function MoviesCard({movie, saveMovie, deleteMovie}) {
             <div className='card__under'>
                 <div className='card__info'>
                   <h2 className='card__name'>{movie.nameRU}</h2>
-                  <Route path='/movies'><button type='button' className={cardLikeButtonClassName} onClick={like}/></Route>
-                  <Route path='/saved-movies'><button type='button' className='card__delete-button page__link' onClick={removeMovie}/></Route>
+                  <Route path='/movies'><button type='button' className={cardLikeButtonClassName} onClick={handleLikeClick}/></Route>
+                  <Route path='/saved-movies'><button type='button' className='card__delete-button page__link' onClick={handleRemoveMovie}/></Route>
                 </div>
                 <p className='card__time'>{getTimeFromMins(movie.duration)}</p>
             </div>
