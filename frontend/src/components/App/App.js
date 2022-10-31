@@ -24,7 +24,8 @@ function App() {
   const [currentMovies, setCurrentMovies] = useState([]);
   const [userMovies, setUserMovies] = useState([])
   const [currentUserMovies, setCurrentUserMovies] = useState([]);
-  const [filter, setFilter] = useState(false)
+  const [filteredMovies, setFilteredMovies] = useState(false)
+  const [filteredUserMovies, setFilteredUserMovies] = useState(false)
 
   const [loading, setLoading] = useState(false)
 
@@ -163,22 +164,22 @@ function App() {
   }
 
   function filterMovies() {
-    if (filter) {
+    if (filteredMovies) {
       setCurrentMovies(movies)
-      setFilter(false)
+      setFilteredMovies(false)
     } else {
       setCurrentMovies((movies) => movies.filter((movie) => movie.duration <= 40))
-      setFilter(true)
+      setFilteredMovies(true)
     }
   }
 
   function filterUserMovies() {
-    if (filter) {
+    if (filteredUserMovies) {
       setCurrentUserMovies(userMovies)
-      setFilter(false)
+      setFilteredUserMovies(false)
     } else {
       setCurrentUserMovies((movies) => movies.filter((movie) => movie.duration <= 40))
-      setFilter(true)
+      setFilteredUserMovies(true)
     }
   }
 
@@ -231,8 +232,8 @@ function App() {
               <Route exact path='/'>
                 <Main loggedIn={loggedIn}/>
               </Route>
-              <ProtectedRoute path='/movies' component={Movies} loggedIn={loggedIn} loading={loading} onOpen={openMenu} filterMovies={filterMovies} movies={currentMovies} saveMovie={saveMovie} useFormWithValidation={useFormWithValidation} searchMovies={searchMovies} filter={filter} userMovies={userMovies} deleteMovie={deleteMovie}/>
-              <ProtectedRoute path='/saved-movies' component={SavedMovies} loggedIn={loggedIn} loading={loading} onOpen={openMenu} filterMovies={filterUserMovies} deleteMovie={deleteMovie} movies={currentUserMovies} useFormWithValidation={useFormWithValidation} searchUserMovies={searchUserMovies} filter={filter} userMovies={userMovies}/>
+              <ProtectedRoute path='/movies' component={Movies} loggedIn={loggedIn} loading={loading} onOpen={openMenu} filterMovies={filterMovies} movies={currentMovies} saveMovie={saveMovie} useFormWithValidation={useFormWithValidation} searchMovies={searchMovies} filter={filteredMovies} userMovies={userMovies} deleteMovie={deleteMovie}/>
+              <ProtectedRoute path='/saved-movies' component={SavedMovies} loggedIn={loggedIn} loading={loading} onOpen={openMenu} filterMovies={filterUserMovies} deleteMovie={deleteMovie} movies={currentUserMovies} useFormWithValidation={useFormWithValidation} searchUserMovies={searchUserMovies} filter={filteredUserMovies} userMovies={userMovies}/>
               <ProtectedRoute path='/profile' component={Profile} loggedIn={loggedIn} onOpen={openMenu} getOut={getOut}  useFormWithValidation={useFormWithValidation} changeUserInfo={changeUserInfo}/>
               <Route path='/signup'>
                 <Register userRegister={userRegister} useFormWithValidation={useFormWithValidation} textErrorApiRegister={textErrorApiRegister}/>
