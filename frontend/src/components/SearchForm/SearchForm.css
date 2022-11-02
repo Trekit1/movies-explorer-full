@@ -66,7 +66,7 @@
     width: 34px;
     height: 14px;
     -webkit-appearance: none;
-    background: grey;
+    background: #E8E8E8;
     border-radius: 20px;
 }
 
@@ -103,22 +103,6 @@
 
 .searchForm__error_visible {
     visibility: visible;
-}
-
-
-.searchForm__test {
-    background-image: url('../../images/greyButton.svg');
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 36px;
-    height: 20px;
-    border: none;
-    background-color: white;
-}
-
-
-.searchForm__test_active {
-    background-image: url('../../images/greenButton.svg');
 }
 
 @media screen and (max-width: 1279px) {

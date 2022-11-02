@@ -31,26 +31,38 @@ function MoviesCard({movie, saveMovie, deleteMovie, userMovies}) {
         isLiked ? "card__like-button_active" : " "}`;
     
     return(
-        <div className='card'>
-            <Route path='/movies'>
+        <>
+        <Route path='/movies'>
+            <div className='card'>
                 <a href={movie.trailerLink} target='_blank' rel="noreferrer">
                     <img src={` https://api.nomoreparties.co/` + movie.image.url} className='card__image' alt='card'/>
                 </a>
-            </Route>
-            <Route path='/saved-movies'>
-                <a href={movie.trailerLink} target='_blank' rel="noreferrer">
-                    <img src={` https://api.nomoreparties.co/` + movie.image} className='card__image' alt='card'/>
-                </a>
-            </Route>
             <div className='card__under'>
                 <div className='card__info'>
                   <h2 className='card__name'>{movie.nameRU}</h2>
-                  <Route path='/movies'><button type='button' className={cardLikeButtonClassName} onClick={handleLikeClick}/></Route>
-                  <Route path='/saved-movies'><button type='button' className='card__delete-button page__link' onClick={handleRemoveMovie}/></Route>
+                  <button type='button' className={cardLikeButtonClassName} onClick={handleLikeClick}/>
                 </div>
                 <p className='card__time'>{getTimeFromMins(movie.duration)}</p>
             </div>
         </div>
+        </Route>
+        <Route path='/saved-movies'>
+            <div className='card'>
+                <a href={movie.trailerLink} target='_blank' rel="noreferrer">
+                  <img src={` https://api.nomoreparties.co/` + movie.image} className='card__image' alt='card'/>
+                </a>
+            <div className='card__under'>
+                <div className='card__info'>
+                  <h2 className='card__name'>{movie.nameRU}</h2>
+                  <button type='button' className='card__delete-button page__link' onClick={handleRemoveMovie}/>
+                </div>
+                <p className='card__time'>{getTimeFromMins(movie.duration)}</p>
+            </div>
+        </div>      
+        </Route>
+        </>
+
+     
     )
 }
 

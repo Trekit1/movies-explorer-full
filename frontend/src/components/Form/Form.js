@@ -4,11 +4,12 @@ import logo from '../../images/logoPromoHeader.svg';
 import '../App/App.css';
 import { Link, Route } from "react-router-dom";
 
-function Form({title, buttonName, question, linkName, children, to, handleSubmit, handleChange, isValid, errors, textErrorApiRegister, textErrorApiLogin}) {
+function Form({title, buttonName, question, linkName, children, to, handleSubmit, handleChange, isValid, errors, textErrorApiRegister, textErrorApiLogin, isValidEmail}) 
+    {
 
-    const buttonClassName = `form__button ${children ? 'register__button' : ' '} ${isValid ? 'page__link' : 'form__button_disabled'}`
+    const buttonClassName = `form__button ${children ? 'register__button' : ' '} ${isValid && isValidEmail ?  'page__link' : 'form__button_disabled'}`
     const errorText = `form__error-text ${isValid ? ' ' : 'form__error-text_visible'}`
-    const inputEmailClassName = `form__input form__input_email ${errors.email === '' ? ' ' : 'form__input_error'}`
+    const inputEmailClassName = `form__input form__input_email ${errors.email === '' && isValidEmail ? ' ' : 'form__input_error'}`
     const inputPasswordClassName = `form__input form__input_password ${errors.password === '' ? ' ' : 'form__input_error'}`
 
     return (

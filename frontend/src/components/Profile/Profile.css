@@ -100,8 +100,28 @@
 }
 
 .profile__form {
+    position: relative;
     display: flex;
     flex-direction: column;
+}
+
+.profile__success {
+    visibility: hidden;
+    top: 60%;
+    position: absolute;
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    color: green;
+    align-self: center;
+}
+
+.profile__success_visible {
+    visibility: visible;
 }
 
 @media screen and (max-width:1279px) {
@@ -114,7 +134,6 @@
     }
 
     .profile__edit-button {
-
         margin-top: 210px;
     }
 }
@@ -134,7 +153,6 @@
     }
 
     .profile__edit-button {
-
         margin-top: 379px;
     }
 }

@@ -7,15 +7,12 @@ import '../App/App.css';
 import Preloader from '../Preloader/Preloader';
 
 
-function Movies({onOpen, movies, filterMovies, saveMovie, loading, useFormWithValidation, searchMovies, filter, userMovies, deleteMovie}) {
+function Movies({onOpen, movies, filterMovies, saveMovie, loading, useFormWithValidation, searchMovies, userMovies, deleteMovie, searchError, notFound}) {
 
     function handleMoviesList() {
         return (
             <>
-            <MoviesCardList movies = {movies} saveMovie={saveMovie} userMovies={userMovies} deleteMovie={deleteMovie}/>
-            <div className='movies__more'>
-              <button type='button' className='movies__more-button page__link'>Еще</button>
-            </div>
+            <MoviesCardList movies = {movies} saveMovie={saveMovie} userMovies={userMovies} deleteMovie={deleteMovie} searchError={searchError} notFound={notFound}/>
             </>
         )
     }
@@ -24,7 +21,7 @@ function Movies({onOpen, movies, filterMovies, saveMovie, loading, useFormWithVa
         <>
         <Header onOpen={onOpen}/>
         <main>
-          <SearchForm filterMovies={filterMovies} useFormWithValidation={useFormWithValidation} searchMovies={searchMovies} filter={filter}/>
+          <SearchForm filterMovies={filterMovies} useFormWithValidation={useFormWithValidation} searchMovies={searchMovies}/>
           {loading ? <Preloader/> :  handleMoviesList()}
         </main>
         <Footer/>

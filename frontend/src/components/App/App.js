@@ -11,6 +11,7 @@ import { mainApi } from '../../utils/MainApi';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import { CurrentUserContext } from '../CurrentUserContext/CurrentUserContext'
 import { moviesApi } from '../../utils/MoviesApi';
+import ErrorNotFound from '../ErrorNotFound/ErrorNotFound';
 
 
 function App() {
@@ -22,28 +23,37 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [movies, setMovies] = useState([]);
   const [currentMovies, setCurrentMovies] = useState([]);
-  const [userMovies, setUserMovies] = useState([])
+  const [userMovies, setUserMovies] = useState([]);
   const [currentUserMovies, setCurrentUserMovies] = useState([]);
-  const [filteredMovies, setFilteredMovies] = useState(false)
-  const [filteredUserMovies, setFilteredUserMovies] = useState(false)
-
-  const [loading, setLoading] = useState(false)
-
+  const [filteredMovies, setFilteredMovies] = useState(false);
+  const [filteredUserMovies, setFilteredUserMovies] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [textErrorApiRegister, setTextErrorApiRegister] = useState('');
-  const [textErrorApiLogin, setTextErrorApiLogin] = useState('')
+  const [textErrorApiLogin, setTextErrorApiLogin] = useState('');
+  const [searchError, setSearchError] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+  const [isSearch, setIsSearch] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false)
 
   function useFormWithValidation() {
     const [values, setValues] = useState({});
     const [errors, setErrors] = useState({});
     const [isValid, setIsValid] = useState(false);
+    const [isValidEmail, setIsValidEmail] = useState(false);
   
     const handleChange = (event) => {
+      const EMAIL_REGEXP = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/iu;
       const target = event.target;
       const name = target.name;
       const value = target.value;
       setValues({...values, [name]: value});
       setErrors({...errors, [name]: target.validationMessage });
       setIsValid(target.closest("form").checkValidity());
+      if (EMAIL_REGEXP.test(values.email)) {
+        setIsValidEmail(true)
+      } else {
+        setIsValidEmail(false)
+      }
     };
   
     const resetForm = useCallback(
@@ -54,15 +64,39 @@ function App() {
       },
       [setValues, setErrors, setIsValid]
     );
-    return { values, handleChange, errors, isValid, resetForm, setValues };
+    return { values, handleChange, errors, isValid, resetForm, setValues, isValidEmail};
   }
+
+  
+
+  let filterUserMovie = localStorage.getItem('filterUserMovie');
+  let filterMovie = localStorage.getItem('filterMovie');
+  let localMovies = JSON.parse(localStorage.getItem('movies'));
+  
+
+
+
+  useEffect(() => {
+    if (filterMovie === 'true') {
+      setFilteredMovies(true)
+    } else {
+      setFilteredMovies(false)
+    }
+  }, [isSearch])
+
+  useEffect(() => {
+    if (filterUserMovie === 'true') {
+      setFilteredUserMovies(true)
+    } else {
+      setFilteredUserMovies(false)
+    }
+  }, [isSearch])
 
   useEffect(() => {
     setLoading(true)
     mainApi.getUserMovies()
     .then((res) => {
       setUserMovies(res)
-
     })
     .catch((err) => {
       console.log(err)
@@ -72,15 +106,23 @@ function App() {
     });
   },[loggedIn])
 
+
+
   useEffect(() => {
-    setCurrentUserMovies(userMovies)
+      setCurrentUserMovies(userMovies)
   },[userMovies]);
 
+  
   useEffect(() => {
-    setCurrentMovies(movies)
+    if (localMovies === null) {
+      setCurrentMovies(movies)
+    } else {
+      setCurrentMovies(localMovies)
+      if (localMovies.length === 0 && isSearch === true)  {setNotFound(true)} else {setNotFound(false)}
+    }
   },[movies]);
 
- 
+
   function openMenu() {
     setIsMenu(true)
   }
@@ -97,7 +139,15 @@ function App() {
         setTextErrorApiRegister('')
       })
       .catch((err) => {
-        setTextErrorApiRegister(err)
+        if (err === 'Ошибка: 409') {
+          setTextErrorApiRegister('Данный email уже существует')
+        }
+        if (err === 'Ошибка: 400') {
+          setTextErrorApiRegister('Введены некорректные данные')
+        }
+        if (err === 'Ошибка: 500') {
+          setTextErrorApiRegister('Ошибка сервера')
+        }
       });
   }
 
@@ -115,7 +165,16 @@ function App() {
         history.push("/movies");
       })
       .catch((err) => {
-        setTextErrorApiLogin(err)
+        console.log(err)
+        if (err === 'Ошибка: 401') {
+          setTextErrorApiLogin('Некорректные email или пароль')
+        }
+        if (err === 'Ошибка: 400') {
+          setTextErrorApiLogin('Введены некорректные данные')
+        }
+        if (err === 'Ошибка: 500') {
+          setTextErrorApiLogin('Ошибка сервера')
+        }
       });
   }
 
@@ -147,7 +206,9 @@ function App() {
   }, [loggedIn]);
 
   function getOut() {
-    localStorage.removeItem("token");
+    localStorage.clear();
+    setFilteredMovies(false);
+    setMovies([]);
     mainApi.deleteHeaders();
     setLoggedIn(false);
     history.push("/");
@@ -156,7 +217,9 @@ function App() {
   function changeUserInfo(email, name) {
     mainApi.changeUserInfo(email, name)
     .then((res) => {
-      console.log(res)
+      setCurrentUser(res)
+      setIsSuccess(true)
+      setTimeout(() => setIsSuccess(false), 2000)
     })
     .catch((err) => {
       console.log(err)
@@ -164,23 +227,11 @@ function App() {
   }
 
   function filterMovies() {
-    if (filteredMovies) {
-      setCurrentMovies(movies)
-      setFilteredMovies(false)
-    } else {
-      setCurrentMovies((movies) => movies.filter((movie) => movie.duration <= 40))
-      setFilteredMovies(true)
-    }
+    setFilteredMovies(!filteredMovies)
   }
 
   function filterUserMovies() {
-    if (filteredUserMovies) {
-      setCurrentUserMovies(userMovies)
-      setFilteredUserMovies(false)
-    } else {
-      setCurrentUserMovies((movies) => movies.filter((movie) => movie.duration <= 40))
-      setFilteredUserMovies(true)
-    }
+    setFilteredUserMovies(!filteredUserMovies)
   }
 
   function saveMovie(movie) {
@@ -209,20 +260,37 @@ function App() {
     moviesApi
       .getInitialMovies()
       .then((movies) => {
-        setMovies(movies)
-        setMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase())))
+        localStorage.setItem('filterMovie', filteredMovies)
+        localStorage.setItem('movies', JSON.stringify(movies));
+        if (filteredMovies === false) {
+          localStorage.setItem('movies', JSON.stringify(movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase()))));
+          setMovies(movies)
+          setMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase())));
+        } else {
+          localStorage.setItem('movies', JSON.stringify(movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase()) && movie.duration <= 40)));
+          setMovies(movies)
+          setMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase()) && movie.duration <= 40));
+        }
+        setIsSearch(true) 
       })
       .catch((err) => {
         console.log(err);
+        setSearchError(true)
       })
       .finally(() => {
         setLoading(false)
       });
   }
-
+  
   function searchUserMovies(values) {
-    setCurrentUserMovies(userMovies)
-    setCurrentUserMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase())))
+    localStorage.setItem('filterUserMovie', filteredUserMovies)
+    if (filteredUserMovies === false) {
+      setCurrentUserMovies(userMovies)
+      setCurrentUserMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase())));
+    } else {
+      setCurrentUserMovies(userMovies)
+      setCurrentUserMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase()) && movie.duration <= 40));
+    }
   }
   
     return(
@@ -232,14 +300,17 @@ function App() {
               <Route exact path='/'>
                 <Main loggedIn={loggedIn}/>
               </Route>
-              <ProtectedRoute path='/movies' component={Movies} loggedIn={loggedIn} loading={loading} onOpen={openMenu} filterMovies={filterMovies} movies={currentMovies} saveMovie={saveMovie} useFormWithValidation={useFormWithValidation} searchMovies={searchMovies} filter={filteredMovies} userMovies={userMovies} deleteMovie={deleteMovie}/>
-              <ProtectedRoute path='/saved-movies' component={SavedMovies} loggedIn={loggedIn} loading={loading} onOpen={openMenu} filterMovies={filterUserMovies} deleteMovie={deleteMovie} movies={currentUserMovies} useFormWithValidation={useFormWithValidation} searchUserMovies={searchUserMovies} filter={filteredUserMovies} userMovies={userMovies}/>
-              <ProtectedRoute path='/profile' component={Profile} loggedIn={loggedIn} onOpen={openMenu} getOut={getOut}  useFormWithValidation={useFormWithValidation} changeUserInfo={changeUserInfo}/>
+              <ProtectedRoute exact path='/movies' component={Movies} loggedIn={loggedIn} loading={loading} onOpen={openMenu} filterMovies={filterMovies} movies={currentMovies} saveMovie={saveMovie} useFormWithValidation={useFormWithValidation} searchMovies={searchMovies} userMovies={userMovies} deleteMovie={deleteMovie} searchError={searchError} notFound={notFound}/>
+              <ProtectedRoute exact path='/saved-movies' component={SavedMovies} loggedIn={loggedIn} loading={loading} onOpen={openMenu} filterMovies={filterUserMovies} deleteMovie={deleteMovie} movies={currentUserMovies} useFormWithValidation={useFormWithValidation} searchUserMovies={searchUserMovies} userMovies={userMovies}/>
+              <ProtectedRoute exact path='/profile' component={Profile} loggedIn={loggedIn} onOpen={openMenu} getOut={getOut}  useFormWithValidation={useFormWithValidation} changeUserInfo={changeUserInfo} isSuccess={isSuccess}/>
               <Route path='/signup'>
                 <Register userRegister={userRegister} useFormWithValidation={useFormWithValidation} textErrorApiRegister={textErrorApiRegister}/>
               </Route>
               <Route path='/signin'>
                 <Login userAuthorization={userAuthorization} useFormWithValidation={useFormWithValidation} textErrorApiLogin={textErrorApiLogin}/>
+              </Route>
+              <Route>
+                <ErrorNotFound/>
               </Route>
             </Switch>
             <Menu isOpen={isMenu} onClose={closeMenu}/>
