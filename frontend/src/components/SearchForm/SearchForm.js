@@ -2,7 +2,7 @@ import './SearchForm.css'
 import '../App/App.css';
 import {Route} from 'react-router-dom';
 
-function SearchForm({filterMovies, useFormWithValidation, searchMovies, searchUserMovies}) {
+function SearchForm({useFilterMovies, useFormWithValidation, searchMovies, searchUserMovies}) {
 
   const {values, handleChange, isValid} = useFormWithValidation();
 
@@ -27,8 +27,6 @@ function SearchForm({filterMovies, useFormWithValidation, searchMovies, searchUs
   let filterMovie = localStorage.getItem('filterMovie');
 
 
-
-
     return(
         <section className='searchForm'>
           <Route path='/movies'>
@@ -38,7 +36,7 @@ function SearchForm({filterMovies, useFormWithValidation, searchMovies, searchUs
             </form>
             <span className={errorText}>Поле должно быть заполнено...</span>
             <div className='searchForm__filter'>
-              <input type='checkbox' className='searchForm__checkbox' onChange={filterMovies} defaultChecked={filterMovie === 'true' ? true : false}/>
+              <input type='checkbox' className='searchForm__checkbox' onChange={useFilterMovies} defaultChecked={filterMovie === 'true' ? true : false}/>
               <p className='searchForm__filter-text'>Короткометражки</p>
           </div>
           </Route>
@@ -49,7 +47,7 @@ function SearchForm({filterMovies, useFormWithValidation, searchMovies, searchUs
             </form>
             <span className={errorText}>Поле должно быть заполнено...</span>
             <div className='searchForm__filter'>
-            <input type='checkbox' className='searchForm__checkbox' onChange={filterMovies}/>
+            <input type='checkbox' className='searchForm__checkbox' onChange={useFilterMovies}/>
               <p className='searchForm__filter-text'>Короткометражки</p>
            </div>
           </Route>

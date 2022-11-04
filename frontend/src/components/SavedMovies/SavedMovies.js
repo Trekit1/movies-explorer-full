@@ -7,7 +7,7 @@ import Preloader from '../Preloader/Preloader';
 
 
 
-function SavedMovies({onOpen, filterMovies, movies, deleteMovie, loading, userMovies, useFormWithValidation, searchUserMovies}) {
+function SavedMovies({onOpen, useFilterMovies, movies, deleteMovie, loading, userMovies, useFormWithValidation, searchUserMovies}) {
 
   function handleMoviesList() {
     return (
@@ -22,7 +22,7 @@ function SavedMovies({onOpen, filterMovies, movies, deleteMovie, loading, userMo
         <>
         <Header onOpen={onOpen}/>
         <main>
-          <SearchForm filterMovies={filterMovies} userMovies={userMovies} useFormWithValidation={useFormWithValidation} searchUserMovies={searchUserMovies}/>
+          <SearchForm useFilterMovies={useFilterMovies} userMovies={userMovies} useFormWithValidation={useFormWithValidation} searchUserMovies={searchUserMovies}/>
           {loading ? <Preloader/> :  handleMoviesList()}
         </main>
         <Footer/>

@@ -12,6 +12,7 @@ import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import { CurrentUserContext } from '../CurrentUserContext/CurrentUserContext'
 import { moviesApi } from '../../utils/MoviesApi';
 import ErrorNotFound from '../ErrorNotFound/ErrorNotFound';
+import ProtectedRouteAuth from '../ProtectedRoute/ProtectedRouteAuth';
 
 
 function App() {
@@ -64,7 +65,7 @@ function App() {
       },
       [setValues, setErrors, setIsValid]
     );
-    return { values, handleChange, errors, isValid, resetForm, setValues, isValidEmail};
+    return { values, handleChange, errors, isValid, resetForm, setValues, isValidEmail, setValues};
   }
 
   
@@ -72,9 +73,8 @@ function App() {
   let filterUserMovie = localStorage.getItem('filterUserMovie');
   let filterMovie = localStorage.getItem('filterMovie');
   let localMovies = JSON.parse(localStorage.getItem('movies'));
+  let logIn = localStorage.getItem('loggedIn')
   
-
-
 
   useEffect(() => {
     if (filterMovie === 'true') {
@@ -84,6 +84,7 @@ function App() {
     }
   }, [isSearch])
 
+
   useEffect(() => {
     if (filterUserMovie === 'true') {
       setFilteredUserMovies(true)
@@ -91,6 +92,7 @@ function App() {
       setFilteredUserMovies(false)
     }
   }, [isSearch])
+
 
   useEffect(() => {
     setLoading(true)
@@ -105,7 +107,6 @@ function App() {
       setLoading(false)
     });
   },[loggedIn])
-
 
 
   useEffect(() => {
@@ -131,14 +132,20 @@ function App() {
     setIsMenu(false)
   }
 
-  function userRegister(email, password, name) {
+  const [isErrorSubmitReg, setIsErrorSubmitReg] = useState(false);
+  const [isErrorSubmitLog, setIsErrorSubmitLog] = useState(false);
+
+  function register(email, password, name) {
     mainApi
       .register(email, password, name)
       .then((res) => {
-        history.push('/signin')
+        authorization(email, password)
         setTextErrorApiRegister('')
+        setIsErrorSubmitReg(false)
       })
       .catch((err) => {
+        console.log(err)
+        setIsErrorSubmitReg(true)
         if (err === 'Ошибка: 409') {
           setTextErrorApiRegister('Данный email уже существует')
         }
@@ -151,21 +158,24 @@ function App() {
       });
   }
 
-  function userAuthorization(email, password) {
+  function authorization(email, password) {
     mainApi
       .authorization(email, password)
       .then((data) => {
         localStorage.setItem("token", data.token);
         const token = localStorage.getItem('token')
         mainApi.updateHeaders(token)
+        localStorage.setItem('loggedIn', true)
       })
       .then((res) => {
-        setLoggedIn(true);
+        setLoggedIn(true);    
         setTextErrorApiLogin('')
+        setIsErrorSubmitLog(false)
         history.push("/movies");
       })
       .catch((err) => {
         console.log(err)
+        setIsErrorSubmitLog(true)
         if (err === 'Ошибка: 401') {
           setTextErrorApiLogin('Некорректные email или пароль')
         }
@@ -178,6 +188,7 @@ function App() {
       });
   }
 
+  
   function authoriz(token) {
     const content = mainApi.getContent(token)
     .then((res) => {
@@ -194,9 +205,9 @@ function App() {
 
   useEffect(() => {
     if (loggedIn) {
-      history.push("/movies");
+      localStorage.setItem('loggedIn', loggedIn)
     }
-  }, [loggedIn]);
+  }, [loggedIn]); 
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -226,11 +237,11 @@ function App() {
     })
   }
 
-  function filterMovies() {
+  function useFilterMovies() {
     setFilteredMovies(!filteredMovies)
   }
 
-  function filterUserMovies() {
+  function useFilterUserMovies() {
     setFilteredUserMovies(!filteredUserMovies)
   }
 
@@ -260,6 +271,7 @@ function App() {
     moviesApi
       .getInitialMovies()
       .then((movies) => {
+        localStorage.setItem('allMovies', JSON.stringify(movies));
         localStorage.setItem('filterMovie', filteredMovies)
         localStorage.setItem('movies', JSON.stringify(movies));
         if (filteredMovies === false) {
@@ -292,7 +304,39 @@ function App() {
       setCurrentUserMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase()) && movie.duration <= 40));
     }
   }
+
+  localStorage.setItem('isSearch', isSearch)
+
+
+
+  function test2(values) {
+    if (isSearch === true ) {
+      test(values)
+    } else {
+      searchMovies(values)
+    }
+  }
+
   
+
+  const allMovies = JSON.parse(localStorage.getItem('allMovies'));
+
+  function test(values) {
+        localStorage.setItem('filterMovie', filteredMovies)
+        localStorage.setItem('movies', JSON.stringify(allMovies));
+        if (filteredMovies === false) {
+          localStorage.setItem('movies', JSON.stringify(allMovies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase()))));
+          setMovies(allMovies)
+          setMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase())));
+        } else {
+          localStorage.setItem('movies', JSON.stringify(allMovies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase()) && movie.duration <= 40)));
+          setMovies(allMovies)
+          setMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase()) && movie.duration <= 40));
+        }
+        setIsSearch(true) 
+  }
+
+
     return(
         <div className="page">
           <CurrentUserContext.Provider value={currentUser}>
@@ -300,15 +344,11 @@ function App() {
               <Route exact path='/'>
                 <Main loggedIn={loggedIn}/>
               </Route>
-              <ProtectedRoute exact path='/movies' component={Movies} loggedIn={loggedIn} loading={loading} onOpen={openMenu} filterMovies={filterMovies} movies={currentMovies} saveMovie={saveMovie} useFormWithValidation={useFormWithValidation} searchMovies={searchMovies} userMovies={userMovies} deleteMovie={deleteMovie} searchError={searchError} notFound={notFound}/>
-              <ProtectedRoute exact path='/saved-movies' component={SavedMovies} loggedIn={loggedIn} loading={loading} onOpen={openMenu} filterMovies={filterUserMovies} deleteMovie={deleteMovie} movies={currentUserMovies} useFormWithValidation={useFormWithValidation} searchUserMovies={searchUserMovies} userMovies={userMovies}/>
-              <ProtectedRoute exact path='/profile' component={Profile} loggedIn={loggedIn} onOpen={openMenu} getOut={getOut}  useFormWithValidation={useFormWithValidation} changeUserInfo={changeUserInfo} isSuccess={isSuccess}/>
-              <Route path='/signup'>
-                <Register userRegister={userRegister} useFormWithValidation={useFormWithValidation} textErrorApiRegister={textErrorApiRegister}/>
-              </Route>
-              <Route path='/signin'>
-                <Login userAuthorization={userAuthorization} useFormWithValidation={useFormWithValidation} textErrorApiLogin={textErrorApiLogin}/>
-              </Route>
+              <ProtectedRoute path='/movies' component={Movies} loggedIn={logIn} loading={loading} onOpen={openMenu} useFilterMovies={useFilterMovies} movies={currentMovies} saveMovie={saveMovie} useFormWithValidation={useFormWithValidation} searchMovies={test} userMovies={userMovies} deleteMovie={deleteMovie} searchError={searchError} notFound={notFound}/>
+              <ProtectedRoute path='/saved-movies' component={SavedMovies} loggedIn={logIn} loading={loading} onOpen={openMenu} useFilterMovies={useFilterUserMovies} deleteMovie={deleteMovie} movies={currentUserMovies} useFormWithValidation={useFormWithValidation} searchUserMovies={searchUserMovies} userMovies={userMovies}/>
+              <ProtectedRoute path='/profile' component={Profile} loggedIn={logIn} onOpen={openMenu} getOut={getOut}  useFormWithValidation={useFormWithValidation} changeUserInfo={changeUserInfo} isSuccess={isSuccess}/>
+              <ProtectedRouteAuth path='/signup' loggedIn={logIn} component={Register} register={register} useFormWithValidation={useFormWithValidation} textErrorApiRegister={textErrorApiRegister} errorSumbit={isErrorSubmitReg}/>
+              <ProtectedRouteAuth path='/signin' loggedIn={logIn} component={Login} authorization={authorization} useFormWithValidation={useFormWithValidation} textErrorApiLogin={textErrorApiLogin} errorSumbit={isErrorSubmitLog}/>
               <Route>
                 <ErrorNotFound/>
               </Route>

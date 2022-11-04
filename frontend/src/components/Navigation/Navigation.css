@@ -23,22 +23,16 @@
     text-decoration: none;
     font-family: 'Inter', Arial, sans-serif;
     font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 18px;
-    color: #000000;
-}
-
-.navigation__save-films {
-    margin: 0px 0px 0px 20px;
-    text-decoration: none;
-    font-family: 'Inter', Arial, sans-serif;
-    font-style: normal;
     font-weight: 400;
     font-size: 14px;
     line-height: 18px;
     color: #000000;
 }
+
+.navigation__films_saved {
+    margin: 0px 0px 0px 20px;
+}
+
 
 .navigation__button-menu {
     display: none;

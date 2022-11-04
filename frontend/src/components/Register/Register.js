@@ -1,7 +1,7 @@
 import Form from "../Form/Form";
 import {useEffect} from 'react';
 
-function Register({userRegister, useFormWithValidation, textErrorApiRegister}) {
+function Register({register, useFormWithValidation, textErrorApiRegister, errorSumbit}) {
     const toLogin = '/signin';
 
     const {values, handleChange, errors, isValid, resetForm, isValidEmail } = useFormWithValidation();
@@ -12,7 +12,7 @@ function Register({userRegister, useFormWithValidation, textErrorApiRegister}) {
 
     const handleSubmit = (event) => {
       event.preventDefault();
-      userRegister(values.email, values.password, values.name);
+      register(values.email, values.password, values.name);
       resetForm();
     }
 
@@ -20,7 +20,7 @@ function Register({userRegister, useFormWithValidation, textErrorApiRegister}) {
 
     return(
         <Form title='Добро пожаловать!' buttonName='Зарегистрироваться' question ='Уже зарегистрированы?' linkName='Войти' 
-        to={toLogin}  handleSubmit={handleSubmit} handleChange={handleChange} isValid={isValid} errors={errors} textErrorApiRegister={textErrorApiRegister} isValidEmail={isValidEmail}>
+        to={toLogin}  handleSubmit={handleSubmit} handleChange={handleChange} isValid={isValid} errors={errors} textErrorApiRegister={textErrorApiRegister} isValidEmail={isValidEmail} errorSumbit={errorSumbit}>
             <>
             <label htmlFor='name' className='form__input-name'>Имя</label>
             <input name='name' className={inputNameClassName} minLength="2" maxLength="40" required></input>

@@ -8,14 +8,14 @@ import {useEffect, useState} from 'react';
 
 function MoviesCardList({movies, saveMovie, deleteMovie, userMovies, searchError, notFound}) {
 
-    let moviesLength = movies.length;
+    const moviesLength = movies.length;
     const width = window.screen.width;
 
     let numberOfMovies = 8;
 
     if (width >= 1280) {numberOfMovies = 12};
     if (width >= 768 && width < 1279) {numberOfMovies = 8};
-    if (width <= 320) {numberOfMovies = 5};
+    if (width <= 767) {numberOfMovies = 5};
 
     
     const [isNeedMore, setIsNeedMore] = useState(false)
@@ -24,7 +24,7 @@ function MoviesCardList({movies, saveMovie, deleteMovie, userMovies, searchError
     function onResize () {
         if (width >= 1280) {setIsNumberOfMovies(12)};
         if (width >= 768 && width < 1279) {setIsNumberOfMovies(8)};
-        if (width <= 320) {setIsNumberOfMovies(5)};
+        if (width <= 767) {setIsNumberOfMovies(5)};
     };
 
     useEffect (() => {
@@ -35,7 +35,7 @@ function MoviesCardList({movies, saveMovie, deleteMovie, userMovies, searchError
     function handeClick() {
             if (width >= 1280) {setIsNumberOfMovies(isNumberOfMovies + 3)};
             if (width >= 768 && width < 1279) {setIsNumberOfMovies(isNumberOfMovies + 2)};
-            if (width <= 320) {setIsNumberOfMovies(isNumberOfMovies + 5)};
+            if (width <= 767) {setIsNumberOfMovies(isNumberOfMovies + 5)};
             if (isNumberOfMovies >= moviesLength) {setIsNeedMore(true)}            
     }
 
@@ -62,7 +62,7 @@ function MoviesCardList({movies, saveMovie, deleteMovie, userMovies, searchError
               {movies.map((movie, index) => {
                 if (index >= isNumberOfMovies) { return } 
                   return( 
-                    <MoviesCard movie={movie} key={index} saveMovie={saveMovie} deleteMovie={deleteMovie} userMovies={userMovies}/>)})}
+                    <MoviesCard movie={movie} key={movie.nameRU} saveMovie={saveMovie} deleteMovie={deleteMovie} userMovies={userMovies}/>)})}
                 <p className={searchErrorClassName}>Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз.</p>
                 <p className={notFoundClassName}>Ничего не найдено.</p>
             </section>
@@ -73,8 +73,8 @@ function MoviesCardList({movies, saveMovie, deleteMovie, userMovies, searchError
 
         <Route path='/saved-movies'>
             <section className={cardListClassName}>
-                {movies.map((movie, index) => (
-                  <MoviesCard movie={movie} key={index} saveMovie={saveMovie} deleteMovie={deleteMovie} userMovies={userMovies}/>))}
+                {movies.map((movie) => (
+                  <MoviesCard movie={movie} key={movie.nameRU} saveMovie={saveMovie} deleteMovie={deleteMovie} userMovies={userMovies}/>))}
                   <p className={searchErrorClassName}>Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз.</p>
                   <p className={notFoundClass}>Ничего не найдено.</p>
             </section>

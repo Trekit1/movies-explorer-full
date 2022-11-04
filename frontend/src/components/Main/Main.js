@@ -8,11 +8,11 @@ import Footer from '../Footer/Footer';
 import HeaderLending from '../HeaderLending/HeaderLending';
 import Header from '../Header/Header';
 
-function Main({loggedIn}) {
+function Main({loggedIn, onOpen}) {
   if (loggedIn) {
     return(
       <>
-      <Header/>
+      <Header onOpen={onOpen}/>
       <main>
         <Promo/>
         <NavTab/>

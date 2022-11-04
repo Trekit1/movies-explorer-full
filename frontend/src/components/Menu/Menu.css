@@ -64,10 +64,6 @@
     margin: 28px 0px 0px 0px;
 }
 
-.menu-nav__tab_active {
-    border-bottom: 2px solid black;
-}
-
 .menu-nav__tab_saved-movies {
     margin: 22px 0px 0px 0px;
 }

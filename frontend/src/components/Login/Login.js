@@ -1,7 +1,7 @@
 import Form from "../Form/Form";
 import {useEffect} from 'react';
 
-function Login({userAuthorization, useFormWithValidation, textErrorApiLogin}) {
+function Login({authorization, useFormWithValidation, textErrorApiLogin, errorSumbit}) {
     const toRegister = '/signup'
 
     const {values, handleChange, errors, isValid, resetForm, isValidEmail} = useFormWithValidation();
@@ -12,13 +12,13 @@ function Login({userAuthorization, useFormWithValidation, textErrorApiLogin}) {
 
     function handleSubmit(evt) {
       evt.preventDefault();
-      userAuthorization(values.email, values.password);
+      authorization(values.email, values.password);
       resetForm();
     }
 
     return(
         <Form title='Рады видеть!' buttonName='Войти' question ='Еще не зарегистрированы?' 
-        linkName='Регистрация' to={toRegister} handleSubmit={handleSubmit} handleChange={handleChange} isValid={isValid} errors={errors} textErrorApiLogin={textErrorApiLogin} isValidEmail={isValidEmail}/>
+        linkName='Регистрация' to={toRegister} handleSubmit={handleSubmit} handleChange={handleChange} isValid={isValid} errors={errors} textErrorApiLogin={textErrorApiLogin} isValidEmail={isValidEmail} errorSumbit={errorSumbit}/>
     )
 }
 

@@ -8,12 +8,32 @@ function Profile({onOpen, getOut, useFormWithValidation, changeUserInfo, isSucce
 
   const currentUser = React.useContext(CurrentUserContext);
 
+  const EMAIL_REGEXP = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/iu;
 
 
-  const {values, handleChange, errors, isValid, resetForm } = useFormWithValidation();
+
+  const {handleChange, isValid, resetForm } = useFormWithValidation();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [test1, setTest1] = useState(false);
+  const [test2, setTest2] = useState(false);
+
+  useEffect(() => {
+    if (currentUser.name !== name) {
+      setTest1(true)
+    } else {
+      setTest1(false)
+    }
+  }, [name])
+
+  useEffect(() => {
+    if (currentUser.email !== email && EMAIL_REGEXP.test(email)) {
+      setTest2(true)
+    } else {
+      setTest2(false)
+    }
+  }, [email])
 
   function handleChangeName(evt) {
     setName(evt.target.value);
@@ -38,7 +58,7 @@ function Profile({onOpen, getOut, useFormWithValidation, changeUserInfo, isSucce
     resetForm();
   }
 
-  const buttonClassName = `profile__edit-button page__link ${isValid ? ' ' : 'profile__edit-button_disabled'}`;
+  const buttonClassName = `profile__edit-button page__link ${isValid && (test1 || test2) ? ' ' : 'profile__edit-button_disabled'}`;
   const successClassName = `profile__success ${isSuccess ? 'profile__success_visible' : ' '}`;
 
     return(
@@ -57,7 +77,7 @@ function Profile({onOpen, getOut, useFormWithValidation, changeUserInfo, isSucce
                   <input type='email' name='userEmail' value={email || ""} className='profile__user-info' onChange={handleChangeEmail} minLength="2" required/>
                 </div>
                 <span className={successClassName}>Ваши данные успешно изменены.</span>
-                <button type='submit' className={buttonClassName} disabled={isValid ? false : true}>Редактировать</button>
+                <button type='submit' className={buttonClassName} disabled={isValid && (test1 || test2) ? false : true}>Редактировать</button>
                 <p className='profile__logout-button page__link' onClick={getOut}>Выйти из аккаунта</p>
               </form>
             </section>

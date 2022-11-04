@@ -7,7 +7,7 @@ import '../App/App.css';
 import Preloader from '../Preloader/Preloader';
 
 
-function Movies({onOpen, movies, filterMovies, saveMovie, loading, useFormWithValidation, searchMovies, userMovies, deleteMovie, searchError, notFound}) {
+function Movies({onOpen, movies, useFilterMovies, saveMovie, loading, useFormWithValidation, searchMovies, userMovies, deleteMovie, searchError, notFound}) {
 
     function handleMoviesList() {
         return (
@@ -21,7 +21,7 @@ function Movies({onOpen, movies, filterMovies, saveMovie, loading, useFormWithVa
         <>
         <Header onOpen={onOpen}/>
         <main>
-          <SearchForm filterMovies={filterMovies} useFormWithValidation={useFormWithValidation} searchMovies={searchMovies}/>
+          <SearchForm useFilterMovies={useFilterMovies} useFormWithValidation={useFormWithValidation} searchMovies={searchMovies}/>
           {loading ? <Preloader/> :  handleMoviesList()}
         </main>
         <Footer/>
