@@ -1,28 +1,45 @@
 import './SearchForm.css'
 import '../App/App.css';
 import {Route} from 'react-router-dom';
+import { useState } from 'react';
 
 function SearchForm({useFilterMovies, useFormWithValidation, searchMovies, searchUserMovies}) {
 
   const {values, handleChange, isValid} = useFormWithValidation();
 
+  const [noValid, setNoValid] = useState(false)
+
+
   function handleSubmitSearchMovies(evt) {
     evt.preventDefault();
-    searchMovies(values)
-    localStorage.setItem('valSearchMovies', values.search)
+    if (evt.target.closest("form").checkValidity()) {
+      setNoValid(false)
+      searchMovies(values);
+      localStorage.setItem('valSearchMovies', values.search);
+    } else {
+      setNoValid(true)
+      return
+    }
   }
+
+  localStorage.setItem('test', JSON.stringify(values))
 
   let valSearchMovies = localStorage.getItem('valSearchMovies');
 
 
   function handleSubmitSearchUserMovies(evt) {
     evt.preventDefault();
-    searchUserMovies(values)
+    if (evt.target.closest("form").checkValidity()) {
+      setNoValid(false)
+      searchUserMovies(values)
+    } else {
+      setNoValid(true)
+      return
+    }
   }
 
 
-  const errorText = `searchForm__error ${isValid ? ' ' : 'searchForm__error_visible'}`
-  const buttonClassName = `searchForm__button ${isValid ? 'page__link' : 'searchForm__button_disabled'}`
+  const errorText = `searchForm__error ${noValid ? 'searchForm__error_visible'  :  ' '}`
 
   let filterMovie = localStorage.getItem('filterMovie');
 
@@ -32,7 +49,7 @@ function SearchForm({useFilterMovies, useFormWithValidation, searchMovies, searc
           <Route path='/movies'>
             <form className='searchForm__search' onSubmit={handleSubmitSearchMovies} noValidate onChange={handleChange}>
               <input name='search' className='serchForm__input' placeholder='Фильм' defaultValue={valSearchMovies || ""}  required/>
-              <button type='submit' className={buttonClassName} disabled={isValid ? false : true}>Найти</button>
+              <button type='submit' className='searchForm__button page__link'>Найти</button>
             </form>
             <span className={errorText}>Поле должно быть заполнено...</span>
             <div className='searchForm__filter'>
@@ -43,7 +60,7 @@ function SearchForm({useFilterMovies, useFormWithValidation, searchMovies, searc
           <Route path='/saved-movies'>
             <form className='searchForm__search' onSubmit={handleSubmitSearchUserMovies} noValidate onChange={handleChange}>
               <input name='search' className='serchForm__input' placeholder='Фильм' required/>
-              <button type='submit' className={buttonClassName} disabled={isValid ? false : true}>Найти</button>
+              <button type='submit' className='searchForm__button page__link'>Найти</button>
             </form>
             <span className={errorText}>Поле должно быть заполнено...</span>
             <div className='searchForm__filter'>

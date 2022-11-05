@@ -73,16 +73,24 @@ function App() {
   let filterUserMovie = localStorage.getItem('filterUserMovie');
   let filterMovie = localStorage.getItem('filterMovie');
   let localMovies = JSON.parse(localStorage.getItem('movies'));
-  let logIn = localStorage.getItem('loggedIn')
+  let logIn = localStorage.getItem('loggedIn');
+  let isLocalSearch = localStorage.getItem('isSearch');
+  let allMovies = JSON.parse(localStorage.getItem('allMovies'));
+  let valSearchMovies = localStorage.getItem('valSearchMovies');
+  let valSearchUserMovies = localStorage.getItem('valSearchUserMovies');
+
+  const afterFirstSearch = true;
+  const filteredMoviesTrue = true;
+  const filteredMoviesFalse = false;
   
 
-  useEffect(() => {
+   useEffect(() => {
     if (filterMovie === 'true') {
       setFilteredMovies(true)
     } else {
       setFilteredMovies(false)
     }
-  }, [isSearch])
+  })
 
 
   useEffect(() => {
@@ -91,7 +99,7 @@ function App() {
     } else {
       setFilteredUserMovies(false)
     }
-  }, [isSearch])
+  })
 
 
   useEffect(() => {
@@ -235,14 +243,35 @@ function App() {
     .catch((err) => {
       console.log(err)
     })
-  }
+  }  
 
   function useFilterMovies() {
     setFilteredMovies(!filteredMovies)
+    if (localMovies !== null) {
+      if (filterMovie === 'true') {
+        localStorage.setItem('movies', JSON.stringify(allMovies.filter((movie) => movie.nameRU.toLowerCase().includes(valSearchMovies.toLowerCase()))));
+        setMovies(allMovies)
+        localStorage.setItem('filterMovie', filteredMoviesFalse)
+      } else {
+        localStorage.setItem('movies', JSON.stringify(allMovies.filter((movie) => movie.nameRU.toLowerCase().includes(valSearchMovies.toLowerCase()) && movie.duration <= 40)));
+        setMovies((movies) => movies.filter((movie) => movie.duration <= 40));
+        localStorage.setItem('filterMovie', filteredMoviesTrue)
+      }
+    }
   }
+
 
   function useFilterUserMovies() {
     setFilteredUserMovies(!filteredUserMovies)
+    if (filterUserMovie === 'true') {
+      setCurrentUserMovies(userMovies)
+      setCurrentUserMovies((userMovies) => userMovies.filter((movie) => movie.nameRU.toLowerCase().includes(valSearchUserMovies.toLowerCase())));
+      localStorage.setItem('filterUserMovie', filteredMoviesFalse)
+    } else {
+      setCurrentUserMovies(userMovies)
+      setCurrentUserMovies((userMovies) => userMovies.filter((movie) => movie.nameRU.toLowerCase().includes(valSearchUserMovies.toLowerCase()) && movie.duration <= 40));
+      localStorage.setItem('filterUserMovie', filteredMoviesTrue)
+    }
   }
 
   function saveMovie(movie) {
@@ -266,7 +295,7 @@ function App() {
       });
   }
 
-  function searchMovies(values) {
+  function searchMoviesWithApi(values) {
     setLoading(true)
     moviesApi
       .getInitialMovies()
@@ -283,7 +312,6 @@ function App() {
           setMovies(movies)
           setMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase()) && movie.duration <= 40));
         }
-        setIsSearch(true) 
       })
       .catch((err) => {
         console.log(err);
@@ -293,35 +321,32 @@ function App() {
         setLoading(false)
       });
   }
+
   
   function searchUserMovies(values) {
     localStorage.setItem('filterUserMovie', filteredUserMovies)
-    if (filteredUserMovies === false) {
+    if (filterUserMovie === 'true') {
+      setCurrentUserMovies(userMovies)
+      setCurrentUserMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase())  && movie.duration <= 40));
+    } else if (filterUserMovie !== 'true') {
       setCurrentUserMovies(userMovies)
       setCurrentUserMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase())));
-    } else {
-      setCurrentUserMovies(userMovies)
-      setCurrentUserMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase()) && movie.duration <= 40));
     }
   }
 
-  localStorage.setItem('isSearch', isSearch)
+  useEffect(() => {
+    localStorage.setItem('isSearch', afterFirstSearch)
+  }, [isSearch])
 
-
-
-  function test2(values) {
-    if (isSearch === true ) {
-      test(values)
+  function searchMovies(values) {
+    if (isLocalSearch === null || isLocalSearch === 'false') {
+      searchMoviesWithApi(values)
     } else {
-      searchMovies(values)
+      searchMoviesLocal(values)
     }
   }
 
-  
-
-  const allMovies = JSON.parse(localStorage.getItem('allMovies'));
-
-  function test(values) {
+  function searchMoviesLocal(values) {
         localStorage.setItem('filterMovie', filteredMovies)
         localStorage.setItem('movies', JSON.stringify(allMovies));
         if (filteredMovies === false) {
@@ -333,8 +358,11 @@ function App() {
           setMovies(allMovies)
           setMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase()) && movie.duration <= 40));
         }
-        setIsSearch(true) 
   }
+
+
+
+  
 
 
     return(
@@ -344,7 +372,7 @@ function App() {
               <Route exact path='/'>
                 <Main loggedIn={loggedIn}/>
               </Route>
-              <ProtectedRoute path='/movies' component={Movies} loggedIn={logIn} loading={loading} onOpen={openMenu} useFilterMovies={useFilterMovies} movies={currentMovies} saveMovie={saveMovie} useFormWithValidation={useFormWithValidation} searchMovies={test} userMovies={userMovies} deleteMovie={deleteMovie} searchError={searchError} notFound={notFound}/>
+              <ProtectedRoute path='/movies' component={Movies} loggedIn={logIn} loading={loading} onOpen={openMenu} useFilterMovies={useFilterMovies} movies={currentMovies} saveMovie={saveMovie} useFormWithValidation={useFormWithValidation} searchMovies={searchMovies} userMovies={userMovies} deleteMovie={deleteMovie} searchError={searchError} notFound={notFound}/>
               <ProtectedRoute path='/saved-movies' component={SavedMovies} loggedIn={logIn} loading={loading} onOpen={openMenu} useFilterMovies={useFilterUserMovies} deleteMovie={deleteMovie} movies={currentUserMovies} useFormWithValidation={useFormWithValidation} searchUserMovies={searchUserMovies} userMovies={userMovies}/>
               <ProtectedRoute path='/profile' component={Profile} loggedIn={logIn} onOpen={openMenu} getOut={getOut}  useFormWithValidation={useFormWithValidation} changeUserInfo={changeUserInfo} isSuccess={isSuccess}/>
               <ProtectedRouteAuth path='/signup' loggedIn={logIn} component={Register} register={register} useFormWithValidation={useFormWithValidation} textErrorApiRegister={textErrorApiRegister} errorSumbit={isErrorSubmitReg}/>

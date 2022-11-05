@@ -16,22 +16,22 @@ function Profile({onOpen, getOut, useFormWithValidation, changeUserInfo, isSucce
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [test1, setTest1] = useState(false);
-  const [test2, setTest2] = useState(false);
+  const [isValidName, setIsValidName] = useState(false);
+  const [isValidEmail, setIsValidEmail] = useState(false);
 
   useEffect(() => {
     if (currentUser.name !== name) {
-      setTest1(true)
+      setIsValidName(true)
     } else {
-      setTest1(false)
+      setIsValidName(false)
     }
   }, [name])
 
   useEffect(() => {
     if (currentUser.email !== email && EMAIL_REGEXP.test(email)) {
-      setTest2(true)
+      setIsValidEmail(true)
     } else {
-      setTest2(false)
+      setIsValidEmail(false)
     }
   }, [email])
 
@@ -58,7 +58,7 @@ function Profile({onOpen, getOut, useFormWithValidation, changeUserInfo, isSucce
     resetForm();
   }
 
-  const buttonClassName = `profile__edit-button page__link ${isValid && (test1 || test2) ? ' ' : 'profile__edit-button_disabled'}`;
+  const buttonClassName = `profile__edit-button page__link ${isValid && (isValidName || isValidEmail) ? ' ' : 'profile__edit-button_disabled'}`;
   const successClassName = `profile__success ${isSuccess ? 'profile__success_visible' : ' '}`;
 
     return(
@@ -77,7 +77,7 @@ function Profile({onOpen, getOut, useFormWithValidation, changeUserInfo, isSucce
                   <input type='email' name='userEmail' value={email || ""} className='profile__user-info' onChange={handleChangeEmail} minLength="2" required/>
                 </div>
                 <span className={successClassName}>Ваши данные успешно изменены.</span>
-                <button type='submit' className={buttonClassName} disabled={isValid && (test1 || test2) ? false : true}>Редактировать</button>
+                <button type='submit' className={buttonClassName} disabled={isValid && (isValidName || isValidEmail) ? false : true}>Редактировать</button>
                 <p className='profile__logout-button page__link' onClick={getOut}>Выйти из аккаунта</p>
               </form>
             </section>
