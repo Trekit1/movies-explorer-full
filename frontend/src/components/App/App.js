@@ -300,6 +300,7 @@ function App() {
     moviesApi
       .getInitialMovies()
       .then((movies) => {
+        localStorage.setItem('isSearch', afterFirstSearch)
         localStorage.setItem('allMovies', JSON.stringify(movies));
         localStorage.setItem('filterMovie', filteredMovies)
         localStorage.setItem('movies', JSON.stringify(movies));
@@ -312,6 +313,7 @@ function App() {
           setMovies(movies)
           setMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase()) && movie.duration <= 40));
         }
+        setIsSearch(true)
       })
       .catch((err) => {
         console.log(err);
@@ -319,6 +321,7 @@ function App() {
       })
       .finally(() => {
         setLoading(false)
+       
       });
   }
 
@@ -333,10 +336,6 @@ function App() {
       setCurrentUserMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase())));
     }
   }
-
-  useEffect(() => {
-    localStorage.setItem('isSearch', afterFirstSearch)
-  }, [isSearch])
 
   function searchMovies(values) {
     if (isLocalSearch === null || isLocalSearch === 'false') {
@@ -362,15 +361,12 @@ function App() {
 
 
 
-  
-
-
     return(
         <div className="page">
           <CurrentUserContext.Provider value={currentUser}>
             <Switch>
               <Route exact path='/'>
-                <Main loggedIn={loggedIn}/>
+                <Main loggedIn={loggedIn} onOpen={openMenu}/>
               </Route>
               <ProtectedRoute path='/movies' component={Movies} loggedIn={logIn} loading={loading} onOpen={openMenu} useFilterMovies={useFilterMovies} movies={currentMovies} saveMovie={saveMovie} useFormWithValidation={useFormWithValidation} searchMovies={searchMovies} userMovies={userMovies} deleteMovie={deleteMovie} searchError={searchError} notFound={notFound}/>
               <ProtectedRoute path='/saved-movies' component={SavedMovies} loggedIn={logIn} loading={loading} onOpen={openMenu} useFilterMovies={useFilterUserMovies} deleteMovie={deleteMovie} movies={currentUserMovies} useFormWithValidation={useFormWithValidation} searchUserMovies={searchUserMovies} userMovies={userMovies}/>

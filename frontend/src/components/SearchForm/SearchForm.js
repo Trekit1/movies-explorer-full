@@ -38,7 +38,6 @@ function SearchForm({useFilterMovies, useFormWithValidation, searchMovies, searc
     }
   }
 
-
   const errorText = `searchForm__error ${noValid ? 'searchForm__error_visible'  :  ' '}`
 
   let filterMovie = localStorage.getItem('filterMovie');
