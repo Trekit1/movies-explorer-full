@@ -1,0 +1,9 @@
+.register__box {
+    margin-top: 69px;
+}
+
+@media screen and (max-width:767px) {
+    .register__box {
+        margin-top: 157px;
+    }
+}
