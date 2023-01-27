@@ -1,11 +1,22 @@
-# movies-explorer-full
+<h1 align="center">Movies</h1>
 
-Поддомен бэкенда дипломной работы: https://api.trekit.diplom.nomoredomains.icu/;
+### Описание:
 
-Поддомен фронтенда дипломной работы: https://trekit.diplom.nomoredomains.icu/;
+Данный проект является дипломной работой курса Яндекс Практикум. Проект представляет собой страницу с описанием проекта и студента, регистрацией и авторизацией пользователя. После регистрации открывается страница с поиском фильмов, возможностью их сохранения и поиском по уже сохранившимя фильмам. В профиле присутствует возможность редактирования данных пользователя. Проект выполнен с учетом адаптивной верстки. 
 
-Публичный Ip Сайта: 62.84.117.249;
+Для корректной работы проекта требуется:
+ 
+- React-router-dom: v 5.2.1,
+- React-dom: v 18.2.0,
+- React-scripts: v 5.0.1,
+- express: v 4.18.1
 
-Ссылка на макет дипломной работы: https://drive.google.com/drive/folders/1oCqKRwY02a9a0Mg5ooQFxA8X8teD93eX?usp=sharing;
 
-Ссылка на пул реквест: https://github.com/Trekit1/movies-explorer-full/pull/1
+### Функциональность и технологии: 
+
+React, js, node.js, css, mongo, html.
+
+### Ссылка на макет дипломной работы: https://drive.google.com/drive/folders/1oCqKRwY02a9a0Mg5ooQFxA8X8teD93eX?usp=sharing;
+
+
+
