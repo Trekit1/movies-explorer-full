@@ -1,4 +1,4 @@
-export const BASE_URL = "https://api.trekit.diplom.nomoredomains.icu";
+export const BASE_URL = "http://localhost:3001";
 
 class MainApi {
   constructor({ url, headers }) {
@@ -119,7 +119,7 @@ class MainApi {
 const token = localStorage.getItem('token');
 
 export const mainApi = new MainApi({
-  url: "https://api.trekit.diplom.nomoredomains.icu",
+  url: "http://localhost:3001",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",

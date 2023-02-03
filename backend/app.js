@@ -10,7 +10,7 @@ const { errors } = require('celebrate');
 
 const { mongoURL } = require('./constants');
 
-const { PORT = 3000, MONGO_URL, NODE_ENV } = process.env;
+const { PORT = 3001, MONGO_URL, NODE_ENV } = process.env;
 
 if (NODE_ENV === 'production') {
   mongoose.connect(MONGO_URL);

@@ -12,9 +12,7 @@ function Menu({isOpen, onClose}) {
                     <NavLink exact to='/' activeStyle={{ borderBottom: 'solid'}} className='menu-nav__tab page__link'>Главная</NavLink>
                     <NavLink to='/movies' activeStyle={{ borderBottom: 'solid'}} className='menu-nav__tab menu-nav__tab_movies page__link '>Фильмы</NavLink>
                     <NavLink to='/saved-movies' activeStyle={{ borderBottom: 'solid'}} className='menu-nav__tab menu-nav__tab_saved-movies page__link'>Сохраненные фильмы</NavLink>
-                    <Link to='/profile'>
-                    <button type='button' className='menu-nav__profile-button page__link'></button>
-                    </Link>
+                    <Link to='/profile'><button type='button' className='menu-nav__profile-button page__link'></button></Link>
                 </div>
             </div>
         </div>
