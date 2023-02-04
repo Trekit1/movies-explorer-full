@@ -11,7 +11,7 @@ function Form({title, buttonName, question, linkName, children, to, handleSubmit
     const errorText = `form__error-text ${errorSumbit ? 'form__error-text_visible' : ''}`
     const inputEmailClassName = `form__input form__input_email ${errors.email === '' && isValidEmail ? ' ' : 'form__input_error'}`
     const inputPasswordClassName = `form__input form__input_password ${errors.password === '' ? ' ' : 'form__input_error'}`
-
+    
     return (
         <form className='form' onSubmit={handleSubmit} onChange={handleChange} noValidate>
             <Link to='/' className='form__logo page__link'><img src={logo} alt='logoForm'/></Link>
