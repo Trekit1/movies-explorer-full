@@ -69,8 +69,6 @@ function App() {
   }
 
   
-
-  let filterUserMovie = localStorage.getItem('filterUserMovie');
   let filterMovie = localStorage.getItem('filterMovie');
   let localMovies = JSON.parse(localStorage.getItem('movies'));
   let logIn = localStorage.getItem('loggedIn');
@@ -78,12 +76,13 @@ function App() {
   let allMovies = JSON.parse(localStorage.getItem('allMovies'));
   let valSearchMovies = localStorage.getItem('valSearchMovies');
   let valSearchUserMovies = localStorage.getItem('valSearchUserMovies');
+  let localIsSearch  = localStorage.getItem('localIsSearch');
+
 
   const afterFirstSearch = true;
   const filteredMoviesTrue = true;
   const filteredMoviesFalse = false;
   
-
    useEffect(() => {
     if (filterMovie === 'true') {
       setFilteredMovies(true)
@@ -94,26 +93,20 @@ function App() {
 
 
   useEffect(() => {
-    if (filterUserMovie === 'true') {
-      setFilteredUserMovies(true)
-    } else {
-      setFilteredUserMovies(false)
+    if (loggedIn) {
+      localStorage.setItem('valSearchUserMovies', '');
+      setLoading(true)
+      mainApi.getUserMovies()
+      .then((res) => {
+        setUserMovies(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      .finally(() => {
+        setLoading(false)
+      });
     }
-  })
-
-
-  useEffect(() => {
-    setLoading(true)
-    mainApi.getUserMovies()
-    .then((res) => {
-      setUserMovies(res)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-    .finally(() => {
-      setLoading(false)
-    });
   },[loggedIn])
 
 
@@ -127,10 +120,9 @@ function App() {
       setCurrentMovies(movies)
     } else {
       setCurrentMovies(localMovies)
-      if (localMovies.length === 0 && isSearch === true)  {setNotFound(true)} else {setNotFound(false)}
+      if (movies.length === 0 && localIsSearch !== null)  {setNotFound(true)} else {setNotFound(false)}
     }
   },[movies]);
-
 
   function openMenu() {
     setIsMenu(true)
@@ -260,19 +252,18 @@ function App() {
     }
   }
 
-
   function useFilterUserMovies() {
     setFilteredUserMovies(!filteredUserMovies)
-    if (filterUserMovie === 'true') {
+    if (!filteredUserMovies) {
       setCurrentUserMovies(userMovies)
-      setCurrentUserMovies((userMovies) => userMovies.filter((movie) => movie.nameRU.toLowerCase().includes(valSearchUserMovies.toLowerCase())));
-      localStorage.setItem('filterUserMovie', filteredMoviesFalse)
+      setCurrentUserMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(valSearchUserMovies.toLowerCase())  && movie.duration <= 40));
     } else {
       setCurrentUserMovies(userMovies)
-      setCurrentUserMovies((userMovies) => userMovies.filter((movie) => movie.nameRU.toLowerCase().includes(valSearchUserMovies.toLowerCase()) && movie.duration <= 40));
-      localStorage.setItem('filterUserMovie', filteredMoviesTrue)
+      setCurrentUserMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(valSearchUserMovies.toLowerCase())));
     }
   }
+
+    
 
   function saveMovie(movie) {
     mainApi.likeMovie(movie)
@@ -314,6 +305,7 @@ function App() {
           setMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase()) && movie.duration <= 40));
         }
         setIsSearch(true)
+        localStorage.setItem('localIsSearch', isSearch)
       })
       .catch((err) => {
         console.log(err);
@@ -321,17 +313,15 @@ function App() {
       })
       .finally(() => {
         setLoading(false)
-       
       });
   }
 
-  
+
   function searchUserMovies(values) {
-    localStorage.setItem('filterUserMovie', filteredUserMovies)
-    if (filterUserMovie === 'true') {
+    if (filteredUserMovies) {
       setCurrentUserMovies(userMovies)
       setCurrentUserMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase())  && movie.duration <= 40));
-    } else if (filterUserMovie !== 'true') {
+    } else {
       setCurrentUserMovies(userMovies)
       setCurrentUserMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase())));
     }
@@ -358,8 +348,6 @@ function App() {
           setMovies((movies) => movies.filter((movie) => movie.nameRU.toLowerCase().includes(values.search.toLowerCase()) && movie.duration <= 40));
         }
   }
-
-
 
     return(
         <div className="page">

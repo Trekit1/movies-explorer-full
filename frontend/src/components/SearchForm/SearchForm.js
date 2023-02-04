@@ -22,8 +22,6 @@ function SearchForm({useFilterMovies, useFormWithValidation, searchMovies, searc
     }
   }
 
-  localStorage.setItem('test', JSON.stringify(values))
-
   let valSearchMovies = localStorage.getItem('valSearchMovies');
 
 
@@ -32,6 +30,7 @@ function SearchForm({useFilterMovies, useFormWithValidation, searchMovies, searc
     if (evt.target.closest("form").checkValidity()) {
       setNoValid(false)
       searchUserMovies(values)
+      localStorage.setItem('valSearchUserMovies', values.search);
     } else {
       setNoValid(true)
       return
